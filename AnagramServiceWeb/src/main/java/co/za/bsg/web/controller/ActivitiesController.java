@@ -66,5 +66,4 @@ public class ActivitiesController {
                                                           @RequestParam("pageSize") Integer pageSize) {
         return ResponseEntity.status(HttpStatus.OK).body(this.wordService.findAllRemovedWords(pageNumber, pageSize));
     }
-
 }

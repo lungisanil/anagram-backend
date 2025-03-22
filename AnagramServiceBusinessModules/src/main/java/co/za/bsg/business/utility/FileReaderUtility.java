@@ -12,7 +12,8 @@ import java.util.List;
 import java.util.Scanner;
 
 public class FileReaderUtility {
-    public FileReaderUtility() {
+    private FileReaderUtility() {
+        throw new InternalServerErrorException("This class only has static method(s), it should not be instantiated");
     }
 
     public static List<Word> readFile(String filePath) {
@@ -22,8 +23,9 @@ public class FileReaderUtility {
 
             List<Word> dictionary = new ArrayList<>();
             while (scanner.hasNextLine()) {
+                String fileWord = scanner.nextLine();
                 Word word = new Word()
-                        .setWordText(scanner.nextLine())
+                        .setWordText(fileWord)
                         .setEffectiveFrom(LocalDateTime.parse(AnagramConstants.DICTIONARY_START_DATE, AnagramConstants.DATE_TIME_FORMATTER))
                         .setEffectiveTo(LocalDateTime.parse(AnagramConstants.END_OF_TIME, AnagramConstants.DATE_TIME_FORMATTER));
                 dictionary.add(word);

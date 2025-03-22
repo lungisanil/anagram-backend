@@ -102,7 +102,7 @@ public class WordController {
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("/add/{word}")
     @CrossOrigin(origins = "http://localhost:4200/")
-    public ResponseEntity<WordRecord> addItem(@PathVariable String word) {
+    public ResponseEntity<WordRecord> addWord(@PathVariable String word) {
         Word persistedWord = this.wordService.addWord(word);
         return ResponseEntity.status(HttpStatus.CREATED).body(WordTranslator.getWordRecord(persistedWord));
     }

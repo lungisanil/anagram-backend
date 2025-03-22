@@ -52,7 +52,7 @@ public class WordServiceImpl implements WordService {
     public Page<Word> pageAllActiveWords(Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("wordText").ascending());
         return Optional.ofNullable(this.wordRepository.pageAllActiveWords(LocalDateTime.now(), pageable))
-                .orElseThrow(() -> new NotFoundException("Cannot find the words"));
+                .orElseThrow(() -> new NotFoundException("Cannot find the active words"));
     }
 
     @Override
@@ -70,16 +70,16 @@ public class WordServiceImpl implements WordService {
     @Override
     public Page<Word> findAllAddedWords(Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("wordText").ascending());
-        return Optional.ofNullable(this.wordRepository.findAllAddedWords(LocalDateTime.parse(AnagramConstants.DICTIONARY_START_DATE,
-                        AnagramConstants.DATE_TIME_FORMATTER), pageable))
+        return Optional.ofNullable(this.wordRepository.findAllAddedWords(LocalDateTime.parse(AnagramConstants.DICTIONARY_START_DATE, AnagramConstants.DATE_TIME_FORMATTER),
+                        pageable))
                 .orElseThrow(() -> new NotFoundException("Cannot added words"));
     }
 
     @Override
     public Page<Word> findAllRemovedWords(Integer pageNumber, Integer pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by("wordText").ascending());
-        return Optional.ofNullable(this.wordRepository.findAllRemovedWords(LocalDateTime.parse(AnagramConstants.END_OF_TIME,
-                        AnagramConstants.DATE_TIME_FORMATTER), pageable))
+        return Optional.ofNullable(this.wordRepository.findAllRemovedWords(LocalDateTime.parse(AnagramConstants.END_OF_TIME, AnagramConstants.DATE_TIME_FORMATTER),
+                        pageable))
                 .orElseThrow(() -> new NotFoundException("Cannot added words"));
     }
 }

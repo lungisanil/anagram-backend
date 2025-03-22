@@ -1,5 +1,6 @@
 package co.za.bsg.web.translator;
 
+import co.za.bsg.domain.exceptions.InternalServerErrorException;
 import co.za.bsg.domain.model.api.WordRecord;
 import co.za.bsg.persistance.model.Word;
 
@@ -10,7 +11,7 @@ import java.util.stream.Collectors;
 public class WordTranslator {
 
     private WordTranslator() {
-
+        throw new InternalServerErrorException("This class only has static method(s), it should not be instantiated");
     }
 
     public static WordRecord getWordRecord(Word retrievedWord) {
@@ -21,9 +22,7 @@ public class WordTranslator {
     }
 
     public static List<WordRecord> getAllWordRecords(List<Word> words) {
-        return words.stream().map(getWordRecordFunction())
-                .collect(Collectors.toList());
-
+        return words.stream().map(getWordRecordFunction()).collect(Collectors.toList());
     }
 
     private static Function<Word, WordRecord> getWordRecordFunction() {

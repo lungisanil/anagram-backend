@@ -12,7 +12,6 @@ import java.util.Map;
 
 @Service
 public class AnagramAlgorithmImpl implements AnagramAlgorithm {
-
     public AnagramAlgorithmImpl() {
     }
 
@@ -34,6 +33,12 @@ public class AnagramAlgorithmImpl implements AnagramAlgorithm {
     public Map<Integer, Integer> countAnagrams(List<Word> words) {
         Map<String, Integer> anagramMap = new HashMap<>();
         Map<Integer, Integer> anagramCounterMap = new HashMap<>();
+        this.countAnagramsForEachWordUsingSortedWordAsKey(words, anagramMap);
+        this.groupWordOfTheSameLength(anagramMap, anagramCounterMap);
+        return anagramCounterMap;
+    }
+
+    private void countAnagramsForEachWordUsingSortedWordAsKey(List<Word> words, Map<String, Integer> anagramMap) {
         for (Word word : words) {
             char[] chars = word.getWordText().toLowerCase().toCharArray();
             Arrays.sort(chars);
@@ -53,6 +58,9 @@ public class AnagramAlgorithmImpl implements AnagramAlgorithm {
                 anagramMap.put(sortedWord, anagramCount);
             }
         }
+    }
+
+    private void groupWordOfTheSameLength(Map<String, Integer> anagramMap, Map<Integer, Integer> anagramCounterMap) {
         for (Map.Entry<String, Integer> entry : anagramMap.entrySet()) {
             Integer anagramCounter = entry.getValue();
             if (anagramCounter != 0) {
@@ -65,9 +73,7 @@ public class AnagramAlgorithmImpl implements AnagramAlgorithm {
                     anagramCounterMap.put(anagramLength, anagramCounter + counter);
                 }
             }
-
         }
-        return anagramCounterMap;
     }
 
     private String sortWord(String aWord) {

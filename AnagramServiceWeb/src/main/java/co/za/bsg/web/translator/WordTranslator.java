@@ -1,8 +1,10 @@
 package co.za.bsg.web.translator;
 
 import co.za.bsg.domain.exceptions.InternalServerErrorException;
+import co.za.bsg.domain.model.api.PaginatedResponse;
 import co.za.bsg.domain.model.api.WordRecord;
 import co.za.bsg.persistance.model.Word;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.function.Function;
@@ -23,6 +25,16 @@ public class WordTranslator {
 
     public static List<WordRecord> getAllWordRecords(List<Word> words) {
         return words.stream().map(getWordRecordFunction()).collect(Collectors.toList());
+    }
+
+    public static PaginatedResponse<WordRecord> getPaginatedWordsResponse(Page<Word> page) {
+        return new PaginatedResponse<WordRecord>()
+                .setPageNumber(page.getNumber())
+                .setPageSize(page.getSize())
+                .setTotalPages(page.getTotalPages())
+                .setTotalElements(page.getTotalElements())
+                .setContent(page.getContent().stream().map(getWordRecordFunction()).collect(Collectors.toList()));
+
     }
 
     private static Function<Word, WordRecord> getWordRecordFunction() {

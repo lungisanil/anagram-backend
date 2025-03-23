@@ -1,6 +1,8 @@
 package co.za.bsg.web.controller;
 
 import co.za.bsg.business.service.WordService;
+import co.za.bsg.domain.model.api.PaginatedResponse;
+import co.za.bsg.domain.model.api.WordRecord;
 import co.za.bsg.persistance.model.Word;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -11,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.http.ResponseEntity;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -28,20 +31,20 @@ class ActivitiesControllerTest {
     @Test
     void findAllAddedWords_success() {
         ArrayList<Word> words = new ArrayList<>();
-        words.add(new Word().setWordText("word"));
+        words.add(new Word().setWordText("word").setEffectiveFrom(LocalDateTime.now()).setEffectiveTo(LocalDateTime.MAX));
         Page<Word> wordPages = new PageImpl<>(words);
         when(this.wordService.findAllAddedWords(any(), any())).thenReturn(wordPages);
-        ResponseEntity<Page<Word>> wordServiceAllAddedWords = this.activitiesController.findAllAddedWords(0, 5);
+        ResponseEntity<PaginatedResponse<WordRecord>> wordServiceAllAddedWords = this.activitiesController.findAllAddedWords(0, 5);
         assertFalse(wordServiceAllAddedWords.getBody().getContent().isEmpty());
     }
 
     @Test
     void findAllRemovedWords_success() {
         ArrayList<Word> words = new ArrayList<>();
-        words.add(new Word().setWordText("word"));
+        words.add(new Word().setWordText("word").setEffectiveFrom(LocalDateTime.now()).setEffectiveTo(LocalDateTime.MAX));
         Page<Word> wordPages = new PageImpl<>(words);
         when(this.wordService.findAllRemovedWords(any(), any())).thenReturn(wordPages);
-        ResponseEntity<Page<Word>> wordServiceAllAddedWords = this.activitiesController.findAllRemovedWords(0, 5);
+        ResponseEntity<PaginatedResponse<WordRecord>> wordServiceAllAddedWords = this.activitiesController.findAllRemovedWords(0, 5);
         assertFalse(wordServiceAllAddedWords.getBody().getContent().isEmpty());
     }
 }

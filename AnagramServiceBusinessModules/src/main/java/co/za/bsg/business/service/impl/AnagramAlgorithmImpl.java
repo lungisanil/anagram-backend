@@ -19,7 +19,6 @@ public class AnagramAlgorithmImpl implements AnagramAlgorithm {
     public List<Word> getAnagramsForGivenWord(List<Word> activeWords, String givenWord) {
         String givenWordSorted = sortWord(givenWord);
         List<Word> anagrams = new ArrayList<>();
-
         for (Word aWord : activeWords) {
             String sortedWord = sortWord(aWord.getWordText());
             if (givenWordSorted.equals(sortedWord)) {
@@ -44,7 +43,6 @@ public class AnagramAlgorithmImpl implements AnagramAlgorithm {
             Arrays.sort(chars);
             String sortedWord = new String(chars);
             Integer anagramCount = anagramMap.get(sortedWord);
-
             if (anagramCount == null) {
                 //Assuming that the word is not an anagram when it is encountered for the first time
                 anagramMap.put(sortedWord, 0);
@@ -66,7 +64,6 @@ public class AnagramAlgorithmImpl implements AnagramAlgorithm {
             if (anagramCounter != 0) {
                 int anagramLength = entry.getKey().length();
                 Integer counter = anagramCounterMap.get(entry.getKey().length());
-
                 if (counter == null) {
                     anagramCounterMap.put(anagramLength, anagramCounter);
                 } else {

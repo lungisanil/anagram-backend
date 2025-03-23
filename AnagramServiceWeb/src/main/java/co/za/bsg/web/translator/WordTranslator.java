@@ -28,7 +28,6 @@ public class WordTranslator {
     }
 
     public static PaginatedResponse<WordRecord> getPaginatedWordsResponse(Page<Word> page) {
-
         return new PaginatedResponse<WordRecord>()
                 .setPageNumber(page.getNumber())
                 .setPageSize(page.getSize())

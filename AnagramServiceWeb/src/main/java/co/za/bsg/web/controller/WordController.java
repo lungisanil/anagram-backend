@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/word")
 public class WordController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(WordController.class);
     private final WordService wordService;
 
     public WordController(WordService wordService) {
@@ -52,6 +55,7 @@ public class WordController {
     @CrossOrigin(origins = "http://localhost:4200/")
     public ResponseEntity<WordRecord> getWord(@PathVariable String word) {
         Word retrievedWord = this.wordService.getWord(word);
+        LOGGER.info(String.format("Successfully retrieved the word : %s", word));
         return ResponseEntity.status(HttpStatus.OK).body(WordTranslator.getWordRecord(retrievedWord));
     }
 
@@ -71,6 +75,7 @@ public class WordController {
     public ResponseEntity<PaginatedResponse<WordRecord>> pageAllActiveWords(@RequestParam("pageNumber") Integer pageNumber,
                                                                             @RequestParam("pageSize") Integer pageSize) {
         Page<Word> wordPage = this.wordService.pageAllActiveWords(pageNumber, pageSize);
+        LOGGER.info(String.format("Successfully retrieved page number : %s for active words", pageNumber));
         return ResponseEntity.status(HttpStatus.OK).body(WordTranslator.getPaginatedWordsResponse(wordPage));
     }
 
@@ -89,6 +94,7 @@ public class WordController {
     @CrossOrigin(origins = "http://localhost:4200/")
     public ResponseEntity<SuccessResponse> removeWord(@PathVariable String word) {
         this.wordService.removeWord(word);
+        LOGGER.info(String.format("Successfully removed the word : %s", word));
         return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse().setMessage("Success"));
     }
 
@@ -106,6 +112,7 @@ public class WordController {
     @CrossOrigin(origins = "http://localhost:4200/")
     public ResponseEntity<WordRecord> addWord(@PathVariable String word) {
         Word persistedWord = this.wordService.addWord(word);
+        LOGGER.info(String.format("Successfully added the word : %s", word));
         return ResponseEntity.status(HttpStatus.CREATED).body(WordTranslator.getWordRecord(persistedWord));
     }
 }

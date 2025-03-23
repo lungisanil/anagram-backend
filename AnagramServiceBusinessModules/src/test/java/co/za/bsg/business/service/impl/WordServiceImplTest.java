@@ -96,6 +96,7 @@ class WordServiceImplTest {
             this.wordService.pageAllActiveWords(0, 10);
         } catch (Exception ex) {
             assertEquals(NotFoundException.class, ex.getClass());
+            assertTrue(ex.getMessage().contains("Cannot find the pages for active words"));
         }
     }
 
@@ -115,6 +116,7 @@ class WordServiceImplTest {
             this.wordService.getAllActiveWords();
         } catch (Exception ex) {
             assertEquals(NotFoundException.class, ex.getClass());
+            assertTrue(ex.getMessage().contains("Cannot find active words"));
         }
     }
 
@@ -133,6 +135,7 @@ class WordServiceImplTest {
             this.wordService.getWord("word");
         } catch (Exception ex) {
             assertEquals(NotFoundException.class, ex.getClass());
+            assertTrue(ex.getMessage().contains("Cannot find the word"));
         }
     }
 
@@ -153,6 +156,7 @@ class WordServiceImplTest {
             this.wordService.findAllAddedWords(0, 5);
         } catch (Exception ex) {
             assertEquals(NotFoundException.class, ex.getClass());
+            assertTrue(ex.getMessage().contains("Cannot find added words"));
         }
     }
 
@@ -173,6 +177,7 @@ class WordServiceImplTest {
             this.wordService.findAllRemovedWords(0, 5);
         } catch (Exception ex) {
             assertEquals(NotFoundException.class, ex.getClass());
+            assertTrue(ex.getMessage().contains("Cannot find removed words"));
         }
     }
 }

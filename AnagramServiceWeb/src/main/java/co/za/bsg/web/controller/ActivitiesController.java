@@ -13,6 +13,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/activities")
 public class ActivitiesController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ActivitiesController.class);
     private final WordService wordService;
 
     public ActivitiesController(WordService wordService) {
@@ -49,6 +52,7 @@ public class ActivitiesController {
     public ResponseEntity<PaginatedResponse<WordRecord>> findAllAddedWords(@RequestParam("pageNumber") Integer pageNumber,
                                                                            @RequestParam("pageSize") Integer pageSize) {
         Page<Word> allAddedWords = this.wordService.findAllAddedWords(pageNumber, pageSize);
+        LOGGER.info(String.format("Successfully found added words for page : %s", pageNumber));
         return ResponseEntity.status(HttpStatus.OK).body(WordTranslator.getPaginatedWordsResponse(allAddedWords));
     }
 
@@ -68,6 +72,7 @@ public class ActivitiesController {
     public ResponseEntity<PaginatedResponse<WordRecord>> findAllRemovedWords(@RequestParam("pageNumber") Integer pageNumber,
                                                                              @RequestParam("pageSize") Integer pageSize) {
         Page<Word> allRemovedWords = this.wordService.findAllRemovedWords(pageNumber, pageSize);
+        LOGGER.info(String.format("Successfully found removed words for page : %s", pageNumber));
         return ResponseEntity.status(HttpStatus.OK).body(WordTranslator.getPaginatedWordsResponse(allRemovedWords));
     }
 }

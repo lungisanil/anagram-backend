@@ -14,6 +14,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -29,6 +31,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/anagram")
 public class AnagramController {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AnagramController.class);
     private final AnagramAlgorithmOrchestrator anagramAlgorithmOrchestrator;
 
     public AnagramController(AnagramAlgorithmOrchestrator anagramAlgorithmOrchestrator) {
@@ -49,9 +52,9 @@ public class AnagramController {
     @GetMapping("/retrieve/anagrams/{word}")
     @CrossOrigin(origins = "http://localhost:4200/")
     public ResponseEntity<List<WordRecord>> getAnagramsForGivenWord(@PathVariable("word") String word) {
+        LOGGER.info(String.format("Getting anagrams for the word : %s entries", word));
         List<Word> anagramsForGivenWord = this.anagramAlgorithmOrchestrator.runAlgorithmForFindingAnagramsForGivenWord(word);
-        return ResponseEntity.status(HttpStatus.OK)
-                .body(WordTranslator.getAllWordRecords(anagramsForGivenWord));
+        return ResponseEntity.status(HttpStatus.OK).body(WordTranslator.getAllWordRecords(anagramsForGivenWord));
     }
 
     @Operation(
@@ -68,6 +71,7 @@ public class AnagramController {
     @GetMapping("/retrieve/anagrams/count")
     @CrossOrigin(origins = "http://localhost:4200/")
     public ResponseEntity<AnagramCounterResponse> countAnagramsOfAllWordLengths() {
+        LOGGER.info("Running the algorithm to count anagrams of different lengths");
         // Start measuring execution time
         long startTime = System.nanoTime();
         List<AnagramCounter> anagramsOfAllWordLengths = this.anagramAlgorithmOrchestrator.countAnagramsOfAllWordLengths();
@@ -75,6 +79,8 @@ public class AnagramController {
         long endTime = System.nanoTime();
         // Calculate the execution time in milliseconds
         long executionTime = (endTime - startTime) / 1000000;
+
+        LOGGER.info(String.format("It took : %s milliseconds to run the algorithm to count anagrams of different lengths", executionTime));
 
         return ResponseEntity.status(HttpStatus.OK)
                 .body(new AnagramCounterResponse()

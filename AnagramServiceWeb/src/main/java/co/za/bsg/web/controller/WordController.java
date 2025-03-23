@@ -1,6 +1,7 @@
 package co.za.bsg.web.controller;
 
 import co.za.bsg.domain.model.api.ErrorResponse;
+import co.za.bsg.domain.model.api.PaginatedResponse;
 import co.za.bsg.domain.model.api.SuccessResponse;
 import co.za.bsg.domain.model.api.WordRecord;
 import co.za.bsg.persistance.model.Word;
@@ -67,9 +68,10 @@ public class WordController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/retrieve/all")
     @CrossOrigin(origins = "http://localhost:4200/")
-    public ResponseEntity<Page<Word>> pageAllActiveWords(@RequestParam("pageNumber") Integer pageNumber,
-                                                         @RequestParam("pageSize") Integer pageSize) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.wordService.pageAllActiveWords(pageNumber, pageSize));
+    public ResponseEntity<PaginatedResponse<WordRecord>> pageAllActiveWords(@RequestParam("pageNumber") Integer pageNumber,
+                                                                            @RequestParam("pageSize") Integer pageSize) {
+        Page<Word> wordPage = this.wordService.pageAllActiveWords(pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(WordTranslator.getPaginatedWordsResponse(wordPage));
     }
 
     @Operation(

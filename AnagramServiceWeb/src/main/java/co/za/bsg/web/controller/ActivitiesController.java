@@ -1,9 +1,11 @@
 package co.za.bsg.web.controller;
 
 import co.za.bsg.domain.model.api.ErrorResponse;
+import co.za.bsg.domain.model.api.PaginatedResponse;
 import co.za.bsg.domain.model.api.WordRecord;
 import co.za.bsg.persistance.model.Word;
 import co.za.bsg.business.service.WordService;
+import co.za.bsg.web.translator.WordTranslator;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -44,9 +46,10 @@ public class ActivitiesController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/added")
     @CrossOrigin(origins = "http://localhost:4200/")
-    public ResponseEntity<Page<Word>> findAllAddedWords(@RequestParam("pageNumber") Integer pageNumber,
-                                                        @RequestParam("pageSize") Integer pageSize) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.wordService.findAllAddedWords(pageNumber, pageSize));
+    public ResponseEntity<PaginatedResponse<WordRecord>> findAllAddedWords(@RequestParam("pageNumber") Integer pageNumber,
+                                                                           @RequestParam("pageSize") Integer pageSize) {
+        Page<Word> allAddedWords = this.wordService.findAllAddedWords(pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(WordTranslator.getPaginatedWordsResponse(allAddedWords));
     }
 
     @Operation(
@@ -62,8 +65,9 @@ public class ActivitiesController {
     @ResponseStatus(HttpStatus.OK)
     @GetMapping("/removed")
     @CrossOrigin(origins = "http://localhost:4200/")
-    public ResponseEntity<Page<Word>> findAllRemovedWords(@RequestParam("pageNumber") Integer pageNumber,
-                                                          @RequestParam("pageSize") Integer pageSize) {
-        return ResponseEntity.status(HttpStatus.OK).body(this.wordService.findAllRemovedWords(pageNumber, pageSize));
+    public ResponseEntity<PaginatedResponse<WordRecord>> findAllRemovedWords(@RequestParam("pageNumber") Integer pageNumber,
+                                                                             @RequestParam("pageSize") Integer pageSize) {
+        Page<Word> allRemovedWords = this.wordService.findAllRemovedWords(pageNumber, pageSize);
+        return ResponseEntity.status(HttpStatus.OK).body(WordTranslator.getPaginatedWordsResponse(allRemovedWords));
     }
 }

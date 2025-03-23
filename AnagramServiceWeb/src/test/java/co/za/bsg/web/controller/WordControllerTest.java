@@ -1,6 +1,7 @@
 package co.za.bsg.web.controller;
 
 import co.za.bsg.business.service.WordService;
+import co.za.bsg.domain.model.api.PaginatedResponse;
 import co.za.bsg.domain.model.api.WordRecord;
 import co.za.bsg.persistance.model.Word;
 import org.junit.jupiter.api.Test;
@@ -44,10 +45,10 @@ class WordControllerTest {
     @Test
     void pageAllActiveWords_success() {
         ArrayList<Word> words = new ArrayList<>();
-        words.add(new Word().setWordText("word"));
+        words.add(new Word().setWordText("word").setEffectiveFrom(LocalDateTime.now()).setEffectiveTo(LocalDateTime.MAX));
         Page<Word> wordPages = new PageImpl<>(words);
         when(this.wordService.pageAllActiveWords(any(), any())).thenReturn(wordPages);
-        ResponseEntity<Page<Word>> pageAllActiveWords = this.wordController.pageAllActiveWords(0, 10);
+        ResponseEntity<PaginatedResponse<WordRecord>> pageAllActiveWords = this.wordController.pageAllActiveWords(0, 10);
         assertFalse(pageAllActiveWords.getBody().getContent().isEmpty());
     }
 

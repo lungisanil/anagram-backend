@@ -16,7 +16,7 @@ public interface WordService {
     /**
      * @param word - word to delete
      */
-    void removeWord(final String word);
+    Boolean removeWord(final String word);
 
     /**
      * @return List<Word>

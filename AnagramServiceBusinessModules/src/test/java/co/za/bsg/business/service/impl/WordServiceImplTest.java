@@ -59,17 +59,28 @@ class WordServiceImplTest {
     @Test
     void testThatWordIsRemovedWordSuccessfully() {
         String wordText = "ABCD";
+        when(this.wordRepository.findActiveWord(any(), any())).thenReturn(new Word().setWordText(wordText));
         doNothing().when(this.wordRepository).retireWord(anyString(), any());
-        this.wordService.removeWord(wordText);
+        Boolean isWordRemoved = this.wordService.removeWord(wordText);
         ArgumentCaptor<String> wordTextArgumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(this.wordRepository, times(1)).retireWord(anyString(), any());
         verify(this.wordRepository).retireWord(wordTextArgumentCaptor.capture(), any());
         assertEquals(wordText, wordTextArgumentCaptor.getValue());
+        assertTrue(isWordRemoved);
+    }
+
+    @Test
+    void testThatWordAskedToBeRemovedDoesNotExist() {
+        String wordText = "ABCD";
+        when(this.wordRepository.findActiveWord(any(), any())).thenReturn(null);
+        Boolean isWordRemoved = this.wordService.removeWord(wordText);
+        assertFalse(isWordRemoved);
     }
 
     @Test
     void testThatWordIsNotRemovedWordSuccessfully() {
         String wordText = "ABCD";
+        when(this.wordRepository.findActiveWord(any(), any())).thenReturn(new Word().setWordText(wordText));
         doThrow(new InternalServerErrorException()).when(this.wordRepository).retireWord(any(), any());
         try {
             this.wordService.removeWord(wordText);

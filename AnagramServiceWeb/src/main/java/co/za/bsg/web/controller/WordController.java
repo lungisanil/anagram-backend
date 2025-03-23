@@ -41,25 +41,6 @@ public class WordController {
     }
 
     @Operation(
-            summary = "Get a word"
-    )
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successfully found a word", content = @Content(mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = WordRecord.class)))),
-            @ApiResponse(responseCode = "404", description = "word not found", content = @Content(mediaType = "application/json")),
-            @ApiResponse(responseCode = "500", description = "Internal Server Error", content = @Content(mediaType = "application/json",
-                    array = @ArraySchema(schema = @Schema(implementation = ErrorResponse.class))))
-    })
-    @ResponseStatus(HttpStatus.OK)
-    @GetMapping("/retrieve/{word}")
-    @CrossOrigin(origins = "http://localhost:4200/")
-    public ResponseEntity<WordRecord> getWord(@PathVariable String word) {
-        Word retrievedWord = this.wordService.getWord(word);
-        LOGGER.info(String.format("Successfully retrieved the word : %s", word));
-        return ResponseEntity.status(HttpStatus.OK).body(WordTranslator.getWordRecord(retrievedWord));
-    }
-
-    @Operation(
             summary = "Get all words"
     )
     @ApiResponses(value = {
@@ -93,9 +74,9 @@ public class WordController {
     @DeleteMapping("/remove/{word}")
     @CrossOrigin(origins = "http://localhost:4200/")
     public ResponseEntity<SuccessResponse> removeWord(@PathVariable String word) {
-        this.wordService.removeWord(word);
+        Boolean status = this.wordService.removeWord(word);
         LOGGER.info(String.format("Successfully removed the word : %s", word));
-        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse().setMessage("Success"));
+        return ResponseEntity.status(HttpStatus.OK).body(new SuccessResponse().setMessage(status ? "Success" : "Failed"));
     }
 
     @Operation(

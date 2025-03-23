@@ -2,6 +2,7 @@ package co.za.bsg.web.controller;
 
 import co.za.bsg.business.service.WordService;
 import co.za.bsg.domain.model.api.PaginatedResponse;
+import co.za.bsg.domain.model.api.SuccessResponse;
 import co.za.bsg.domain.model.api.WordRecord;
 import co.za.bsg.persistance.model.Word;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -33,14 +33,6 @@ class WordControllerTest {
 
     @InjectMocks
     private WordController wordController;
-
-    @Test
-    void getWord_success() {
-        String word = "word";
-        when(this.wordService.getWord(any())).thenReturn(new Word().setWordText(word).setEffectiveFrom(LocalDateTime.now()).setEffectiveTo(LocalDateTime.MAX));
-        ResponseEntity<WordRecord> wordServiceWord = this.wordController.getWord(word);
-        assertEquals(word, wordServiceWord.getBody().getWordText());
-    }
 
     @Test
     void pageAllActiveWords_success() {
@@ -55,11 +47,23 @@ class WordControllerTest {
     @Test
     void removeWord_success() {
         String wordText = "ABCD";
-        doNothing().when(this.wordService).removeWord(anyString());
-        this.wordController.removeWord(wordText);
+        when(this.wordService.removeWord(anyString())).thenReturn(true);
+        ResponseEntity<SuccessResponse> response = this.wordController.removeWord(wordText);
         ArgumentCaptor<String> wordTextArgumentCaptor = ArgumentCaptor.forClass(String.class);
         verify(this.wordService, times(1)).removeWord(wordTextArgumentCaptor.capture());
         assertEquals(wordText, wordTextArgumentCaptor.getValue());
+        assertEquals("Success", response.getBody().getMessage());
+    }
+
+    @Test
+    void removeWord_failed() {
+        String wordText = "ABCD";
+        when(this.wordService.removeWord(anyString())).thenReturn(false);
+        ResponseEntity<SuccessResponse> response = this.wordController.removeWord(wordText);
+        ArgumentCaptor<String> wordTextArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(this.wordService, times(1)).removeWord(wordTextArgumentCaptor.capture());
+        assertEquals(wordText, wordTextArgumentCaptor.getValue());
+        assertEquals("Failed", response.getBody().getMessage());
     }
 
     @Test

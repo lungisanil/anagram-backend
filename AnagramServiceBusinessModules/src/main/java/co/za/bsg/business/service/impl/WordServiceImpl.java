@@ -30,7 +30,7 @@ public class WordServiceImpl implements WordService {
         this.wordRepository = wordRepository;
     }
 
-    @CacheEvict(value="allActiveWords", allEntries=true)
+    @CacheEvict(value = "allActiveWords", allEntries = true)
     @Override
     public Word addWord(final String word) {
         try {
@@ -46,11 +46,18 @@ public class WordServiceImpl implements WordService {
         }
     }
 
-    @CacheEvict(value="allActiveWords", allEntries=true)
+    @CacheEvict(value = "allActiveWords", allEntries = true)
     @Override
-    public void removeWord(final String word) {
+    public Boolean removeWord(final String word) {
         try {
-            this.wordRepository.retireWord(word, LocalDateTime.now());
+            //Check that the word exists
+            Word returnedWord = this.getWord(word);
+            if (returnedWord != null) {
+                this.wordRepository.retireWord(word, LocalDateTime.now());
+                return true;
+            } else {
+                return false;
+            }
         } catch (Exception exception) {
             String msg = String.format("Error occurred when trying to remove the word :%s", word);
             LOGGER.error(msg);

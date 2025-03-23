@@ -7,6 +7,7 @@ import co.za.bsg.persistance.model.Word;
 import co.za.bsg.persistance.repository.WordRepository;
 import co.za.bsg.business.service.WordService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -55,6 +56,7 @@ public class WordServiceImpl implements WordService {
                 .orElseThrow(() -> new NotFoundException("Cannot find the active words"));
     }
 
+    @Cacheable("allActiveWords")
     @Override
     public List<Word> getAllActiveWords() {
         return Optional.ofNullable(this.wordRepository.findAllActiveWords(LocalDateTime.now()))
